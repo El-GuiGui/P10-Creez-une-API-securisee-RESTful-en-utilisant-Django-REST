@@ -6,7 +6,7 @@ from .models import Project, Contributor, Issue, Comment
 
 class APITests(APITestCase):
     def setUp(self):
-        self.user = User.objects.create_user(username="testuser", password="testpass")
+        self.user = User.objects.create_user(username="rrrrr", password="softdesk123")
         self.token = RefreshToken.for_user(self.user).access_token
         self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {self.token}")
 
@@ -15,8 +15,8 @@ class APITests(APITestCase):
         )
         self.contributor = Contributor.objects.create(user=self.user, project=self.project)
         self.issue = Issue.objects.create(
-            title="Test Issue",
-            description="A test issue",
+            title="Test titre",
+            description="test description",
             project=self.project,
             author_user=self.user,
             assignee_user=self.user,
@@ -28,8 +28,8 @@ class APITests(APITestCase):
 
     def test_create_project(self):
         data = {
-            "title": "New Project",
-            "description": "A new project",
+            "title": "test Project",
+            "description": "test desc project",
             "type": "FRONTEND",
             "author_user": self.user.id,
         }
@@ -42,8 +42,8 @@ class APITests(APITestCase):
 
     def test_create_issue(self):
         data = {
-            "title": "New Issue",
-            "description": "A new issue",
+            "title": "test Issue",
+            "description": "test desc issue",
             "project": self.project.id,
             "author_user": self.user.id,
             "assignee_user": self.user.id,
