@@ -19,11 +19,13 @@ class Project(models.Model):
     description = models.TextField()
     type = models.CharField(max_length=10, choices=PROJECT_TYPES)
     author_user = models.ForeignKey(User, related_name="projects", on_delete=models.CASCADE)
+    created_time = models.DateTimeField(auto_now_add=True)
 
 
 class Contributor(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     project = models.ForeignKey(Project, related_name="contributors", on_delete=models.CASCADE)
+    created_time = models.DateTimeField(auto_now_add=True)
 
 
 class Issue(models.Model):

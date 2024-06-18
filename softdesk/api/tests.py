@@ -6,39 +6,28 @@ from .models import Project, Contributor, Issue, Comment
 
 class APITests(APITestCase):
     def setUp(self):
-        self.user = User.objects.create_user(username="rrrrr", password="softdesk123")
+        self.user = User.objects.create_user(username="testuser", password="testpass")
         self.token = RefreshToken.for_user(self.user).access_token
         self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {self.token}")
 
         self.project = Project.objects.create(
             title="Test Project", description="A test project", type="BACKEND", author_user=self.user
         )
-        self.contributor = Contributor.objects.create(user=self.user, project=self.project)
-        self.issue = Issue.objects.create(
-            title="Test titre",
-            description="test description",
-            project=self.project,
-            author_user=self.user,
-            assignee_user=self.user,
-            priority="MEDIUM",
-            tag="BUG",
-            status="TODO",
-        )
-        self.comment = Comment.objects.create(issue=self.issue, author_user=self.user, description="A test comment")
 
     def test_create_project(self):
         data = {
-            "title": "test Project",
-            "description": "test desc project",
+            "title": "New Project",
+            "description": "A new project",
             "type": "FRONTEND",
             "author_user": self.user.id,
         }
         response = self.client.post("/api/projects/", data)
         self.assertEqual(response.status_code, 201)
 
-    def test_get_project(self):
-        response = self.client.get(f"/api/projects/{self.project.id}/")
+    def test_get_projects(self):
+        response = self.client.get("/api/projects/")
         self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Test Project")
 
     def test_create_issue(self):
         data = {
