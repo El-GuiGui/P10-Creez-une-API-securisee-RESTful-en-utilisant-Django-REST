@@ -1,5 +1,5 @@
 from rest_framework.routers import DefaultRouter
-from .views import ProjectViewSet, ContributorViewSet, IssueViewSet, CommentViewSet
+from .views import ProjectViewSet, ContributorViewSet, IssueViewSet, CommentViewSet, UserProfileViewSet
 from django.urls import path, include
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -11,6 +11,7 @@ router.register(r"projects", ProjectViewSet)
 router.register(r"contributors", ContributorViewSet)
 router.register(r"issues", IssueViewSet)
 router.register(r"comments", CommentViewSet)
+router.register(r"userprofiles", UserProfileViewSet)
 
 urlpatterns = router.urls
 

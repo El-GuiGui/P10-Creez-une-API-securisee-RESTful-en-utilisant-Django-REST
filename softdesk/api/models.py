@@ -21,11 +21,23 @@ class Project(models.Model):
     author_user = models.ForeignKey(User, related_name="projects", on_delete=models.CASCADE)
     created_time = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        ordering = ["-created_time"]
+
 
 class Contributor(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     project = models.ForeignKey(Project, related_name="contributors", on_delete=models.CASCADE)
     created_time = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.project.title}"
+
+    class Meta:
+        ordering = ["-created_time"]
 
 
 class Issue(models.Model):
@@ -66,9 +78,31 @@ class Issue(models.Model):
     status = models.CharField(max_length=15, choices=STATUS_CHOICES, default=TODO)
     created_time = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        ordering = ["-created_time"]
+
 
 class Comment(models.Model):
     issue = models.ForeignKey(Issue, related_name="comments", on_delete=models.CASCADE)
     author_user = models.ForeignKey(User, related_name="comments", on_delete=models.CASCADE)
     description = models.TextField()
     created_time = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.author_user.username} - {self.issue.title}"
+
+    class Meta:
+        ordering = ["-created_time"]
+
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    can_be_contacted = models.BooleanField(default=False)
+    can_data_be_shared = models.BooleanField(default=False)
+    birth_date = models.DateField(null=True, blank=True)
+
+    def __str__(self):
+        return self.user.username
