@@ -52,10 +52,6 @@ SoftDesk est une application de remontée et suivi des problèmes techniques des
 
 3. Créer et activer l'environnement virtuel avec Pipenv :
     ```bash
-    pipenv install
-    ```
-    
-    ```bash
     pipenv shell
     ```
 
