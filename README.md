@@ -196,3 +196,4 @@ Pour réduire l'impact environnemental de l'application, plusieurs mesures ont �
 
 
 Je rajoute ici les rapports de flake8 pour la conformité de la pep8 :
+![reportflake](image.png)
