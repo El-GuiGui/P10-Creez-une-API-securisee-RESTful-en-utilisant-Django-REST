@@ -19,7 +19,7 @@ class Project(models.Model):
 
     title = models.CharField(max_length=100)
     description = models.TextField()
-    type = models.CharField(maxlength=10, choices=PROJECT_TYPES)
+    type = models.CharField(max_length=10, choices=PROJECT_TYPES)
     author_user = models.ForeignKey(User, related_name="projects", on_delete=models.SET_NULL, null=True, blank=True)
     created_time = models.DateTimeField(auto_now_add=True)
 
@@ -81,9 +81,9 @@ class Issue(models.Model):
     assignee_user = models.ForeignKey(
         User, related_name="assigned_issues", on_delete=models.SET_NULL, null=True, blank=True
     )
-    priority = models.CharField(maxlength=10, choices=PRIORITY_CHOICES)
-    tag = models.CharField(maxlength=10, choices=TAG_CHOICES)
-    status = models.CharField(maxlength=15, choices=STATUS_CHOICES, default=TODO)
+    priority = models.CharField(max_length=10, choices=PRIORITY_CHOICES)
+    tag = models.CharField(max_length=10, choices=TAG_CHOICES)
+    status = models.CharField(max_length=15, choices=STATUS_CHOICES, default=TODO)
     created_time = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
