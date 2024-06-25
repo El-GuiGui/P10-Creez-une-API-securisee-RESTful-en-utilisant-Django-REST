@@ -44,14 +44,28 @@ SoftDesk est une application de remontée et suivi des problèmes techniques des
     ```
 
 
-2. Installez les dépendances :
+
+2. Installer Pipenv :
+    ```bash
+    pip install pipenv
+    ```
+
+3. Créer et activer l'environnement virtuel avec Pipenv :
+    ```bash
+    pipenv install
+    ```
+    
+    ```bash
+    pipenv shell
+    ```
+
+4. Installer les dépendances définies dans le `Pipfile` :
     ```bash
     pipenv install
     ```
 
 
-3. Appliquez les migrations pour configurer la base de données :
-
+5. Appliquer les migrations :
     ```bash
     python manage.py migrate
     ```
