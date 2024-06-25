@@ -7,8 +7,11 @@ name = "pypi"
 django = "*"
 djangorestframework = "*"
 djangorestframework-simplejwt = "*"
+pipenv = "*"
 
 [dev-packages]
+flake8 = "*"
+black = "*"
 
 [requires]
 python_version = "3.11"
