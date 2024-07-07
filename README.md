@@ -106,7 +106,7 @@ SoftDesk est une application de remontée et suivi des problèmes techniques des
 
 ### Autres :
 
-- **Nom d'utilisateur :** `john`
+- **Nom d'utilisateur :** `john` & `john1` & `john2` & `johnjohn` & `johnjohn1` & `johnjohn2`
 - **Mot de passe :** `johnsoft123`
 
 ## Remarque :
@@ -130,40 +130,40 @@ Plutôt que de redéfinir complètement le modèle `User` de Django, un modèle 
 
 ### Utilisateurs
 
-- `POST /register/`: Inscription d'un nouvel utilisateur.
-- `DELETE /delete/`: Suppression du compte utilisateur.
+- `POST /api/register/`: Inscription d'un nouvel utilisateur.
+- `DELETE /api/delete/`: Suppression du compte utilisateur.
 
 ### Projets
 
-- `GET /projects/`: Liste des projets.
-- `POST /projects/`: Création d'un projet.
-- `GET /projects/{id}/`: Détails d'un projet.
-- `PUT /projects/{id}/`: Mise à jour d'un projet.
-- `DELETE /projects/{id}/`: Suppression d'un projet.
+- `GET /api/projects/`: Liste des projets.
+- `POST /api/projects/`: Création d'un projet.
+- `GET /api/projects/{id}/`: Détails d'un projet.
+- `PUT /api/projects/{id}/`: Mise à jour d'un projet.
+- `DELETE /api/projects/{id}/`: Suppression d'un projet.
 
 ### Contributeurs
 
-- `GET /contributors/`: Liste des contributeurs.
-- `POST /contributors/`: Ajout d'un contributeur.
-- `GET /contributors/{id}/`: Détails d'un contributeur.
-- `PUT /contributors/{id}/`: Mise à jour d'un contributeur.
-- `DELETE /contributors/{id}/`: Suppression d'un contributeur.
+- `GET /api/contributors/`: Liste des contributeurs.
+- `POST /api/contributors/`: Ajout d'un contributeur.
+- `GET /api/contributors/{id}/`: Détails d'un contributeur.
+- `PUT /api/contributors/{id}/`: Mise à jour d'un contributeur.
+- `DELETE /api/contributors/{id}/`: Suppression d'un contributeur.
 
 ### Issues
 
-- `GET /issues/`: Liste des issues.
-- `POST /issues/`: Création d'une issue.
-- `GET /issues/{id}/`: Détails d'une issue.
-- `PUT /issues/{id}/`: Mise à jour d'une issue.
-- `DELETE /issues/{id}/`: Suppression d'une issue.
+- `GET /api/issues/`: Liste des issues.
+- `POST /api/issues/`: Création d'une issue.
+- `GET /api/issues/{id}/`: Détails d'une issue.
+- `PUT /api/issues/{id}/`: Mise à jour d'une issue.
+- `DELETE /api/issues/{id}/`: Suppression d'une issue.
 
 ### Commentaires
 
-- `GET /comments/`: Liste des commentaires.
-- `POST /comments/`: Création d'un commentaire.
-- `GET /comments/{id}/`: Détails d'un commentaire.
-- `PUT /comments/{id}/`: Mise à jour d'un commentaire.
-- `DELETE /comments/{id}/`: Suppression d'un commentaire.
+- `GET /api/comments/`: Liste des commentaires.
+- `POST /api/comments/`: Création d'un commentaire.
+- `GET /api/comments/{id}/`: Détails d'un commentaire.
+- `PUT /api/comments/{id}/`: Mise à jour d'un commentaire.
+- `DELETE /api/comments/{id}/`: Suppression d'un commentaire.
 
 ## Green Code
 
