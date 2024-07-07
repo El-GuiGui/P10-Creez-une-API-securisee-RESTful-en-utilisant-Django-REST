@@ -2,10 +2,13 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
-import uuid
 
 
 class Project(models.Model):
+    """
+    Modèle représentant un projet.
+    """
+
     BACKEND = "BACKEND"
     FRONTEND = "FRONTEND"
     IOS = "IOS"
@@ -31,6 +34,10 @@ class Project(models.Model):
 
 
 class Contributor(models.Model):
+    """
+    Modèle représentant un contributeur à un projet.
+    """
+
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     project = models.ForeignKey(Project, related_name="contributors", on_delete=models.CASCADE)
     created_time = models.DateTimeField(auto_now_add=True)
@@ -47,6 +54,10 @@ class Contributor(models.Model):
 
 
 class Issue(models.Model):
+    """
+    Modèle représentant une issue dans un projet.
+    """
+
     LOW = "LOW"
     MEDIUM = "MEDIUM"
     HIGH = "HIGH"
@@ -94,6 +105,10 @@ class Issue(models.Model):
 
 
 class Comment(models.Model):
+    """
+    Modèle représentant un commentaire sur une issue.
+    """
+
     issue = models.ForeignKey(Issue, related_name="comments", on_delete=models.CASCADE)
     author_user = models.ForeignKey(User, related_name="comments", on_delete=models.SET_NULL, null=True, blank=True)
     description = models.TextField()
@@ -111,6 +126,10 @@ class Comment(models.Model):
 
 
 class UserProfile(models.Model):
+    """
+    Modèle représentant le profil d'un utilisateur.
+    """
+
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     can_be_contacted = models.BooleanField(default=False)
     can_data_be_shared = models.BooleanField(default=False)
@@ -120,17 +139,27 @@ class UserProfile(models.Model):
         return self.user.username
 
 
+"""
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         UserProfile.objects.create(user=instance)
+"""
 
 
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
-    instance.userprofile.save()
+    """
+    Signal pour sauvegarder le profil utilisateur après la sauvegarde d'un utilisateur.
+    """
+    if hasattr(instance, "userprofile"):
+        instance.userprofile.save()
 
 
 @receiver(post_delete, sender=User)
 def anonymize_user_data(sender, instance, **kwargs):
-    UserProfile.objects.filter(user=instance).delete()
+    """
+    Signal pour anonymiser les données utilisateur après la suppression d'un utilisateur.
+    """
+    if hasattr(instance, "userprofile"):
+        instance.userprofile.delete()
