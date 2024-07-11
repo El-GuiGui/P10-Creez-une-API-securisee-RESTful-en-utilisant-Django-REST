@@ -10,12 +10,19 @@ from .serializers import (
     UserRegistrationSerializer,
 )
 from rest_framework.permissions import IsAuthenticated
-from .permissions import IsAuthorOrReadOnly, IsContributor
+from .permissions import (
+    IsAuthorOrReadOnly,
+    IsContributor,
+    IsContributorOrAuthor,
+    IsProjectAuthor,
+    IsCommentContributorOrAuthor,
+)
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.db import models
 from django.contrib.auth.models import User
+from rest_framework.exceptions import ValidationError
 
 
 class StandardResultsSetPagination(PageNumberPagination):
@@ -59,7 +66,7 @@ class ContributorViewSet(viewsets.ModelViewSet):
 
     queryset = Contributor.objects.all()
     serializer_class = ContributorSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsContributorOrAuthor]
     pagination_class = StandardResultsSetPagination
 
     def get_queryset(self):
@@ -67,7 +74,10 @@ class ContributorViewSet(viewsets.ModelViewSet):
         Récupère les contributions de l'utilisateur courant.
         """
         user = self.request.user
-        return Contributor.objects.filter(user=user).distinct()
+        project_id = self.request.query_params.get("project")
+        if project_id:
+            return Contributor.objects.filter(project_id=project_id)
+        return Contributor.objects.filter(models.Q(user=user) | models.Q(project__author_user=user)).distinct()
 
     def perform_create(self, serializer):
         """
@@ -79,11 +89,21 @@ class ContributorViewSet(viewsets.ModelViewSet):
         try:
             project = Project.objects.get(id=project_id)
             user = User.objects.get(id=user_id)
-            serializer.save(user=user, project=project)
+            if Contributor.objects.filter(project=project, user=user).exists():
+                raise ValidationError({"detail": "This user is already a contributor to this project."})
+            contributor = serializer.save(user=user, project=project)
+            return Response(ContributorSerializer(contributor).data, status=status.HTTP_201_CREATED)
         except Project.DoesNotExist:
             return Response({"detail": "Project not found."}, status=status.HTTP_404_NOT_FOUND)
         except User.DoesNotExist:
             return Response({"detail": "User not found."}, status=status.HTTP_404_NOT_FOUND)
+
+    def perform_destroy(self, instance):
+        if instance.project.author_user != self.request.user:
+            return Response(
+                {"detail": "You do not have permission to delete this contributor."}, status=status.HTTP_403_FORBIDDEN
+            )
+        instance.delete()
 
 
 class IssueViewSet(viewsets.ModelViewSet):
@@ -93,7 +113,7 @@ class IssueViewSet(viewsets.ModelViewSet):
 
     queryset = Issue.objects.all()
     serializer_class = IssueSerializer
-    permission_classes = [IsAuthenticated, IsContributor, IsAuthorOrReadOnly]
+    permission_classes = [IsAuthenticated, IsContributorOrAuthor, IsAuthorOrReadOnly]
     pagination_class = StandardResultsSetPagination
 
     def get_queryset(self):
@@ -119,7 +139,7 @@ class CommentViewSet(viewsets.ModelViewSet):
 
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
-    permission_classes = [IsAuthenticated, IsContributor, IsAuthorOrReadOnly]
+    permission_classes = [IsAuthenticated, IsCommentContributorOrAuthor, IsAuthorOrReadOnly]
     pagination_class = StandardResultsSetPagination
 
     def get_queryset(self):
@@ -127,7 +147,9 @@ class CommentViewSet(viewsets.ModelViewSet):
         Récupère les commentaires de l'utilisateur courant.
         """
         user = self.request.user
-        return Comment.objects.filter(author_user=user).distinct()
+        return Comment.objects.filter(
+            models.Q(author_user=user) | models.Q(issue__project__contributors__user=user)
+        ).distinct()
 
     def perform_create(self, serializer):
         """
